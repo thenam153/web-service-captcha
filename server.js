@@ -1,4 +1,4 @@
-const port = 3999 
+
 var express = require('express')
 var cors = require('cors')
 var app = express()
@@ -6,8 +6,9 @@ var session    = require('express-session')
 var passport = require('passport')
 var bodyParser = require('body-parser')
 var path = require('path');
-var env = require('dotenv')
-
+var env       = process.env.NODE_ENV || "development";
+var config    = require(path.join(__dirname, '.','app', 'config', 'config.json'))[env];
+const port = config.server
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 // app.use(bodyParser.raw())

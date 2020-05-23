@@ -6,7 +6,8 @@
       "database": "webnro",
       "host": "127.0.0.1",
       "dialect": "mysql",
-      "port": 3309
+      "port": 3309,
+      "server": 3999
     },
     "test": {
       "username": "",
@@ -14,7 +15,8 @@
       "database": "",
       "host": "",
       "dialect": "mysql",
-      "port": 3309
+      "port": 3309,
+      "server": 3999
     },
     "production": {
       "username": "root",
@@ -22,6 +24,7 @@
       "database": "webnro",
       "host": "127.0.0.1",
       "dialect": "mysql",
-      "port": 3306
+      "port": 3306,
+      "server": 80
     }
   }
