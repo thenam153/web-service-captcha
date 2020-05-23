@@ -8,7 +8,7 @@ const formUrlEncoded = x =>
    Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '')
    
 router.post('/captcha', (req, res) => {
-    console.log(req.body)
+
     if(req.body && req.body.key) {
         models.key.findOne({where: {
             key: req.body.key
@@ -26,7 +26,7 @@ router.post('/captcha', (req, res) => {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 })
             .then(response => {
-                console.log(response)
+                
                 if(response.data != 'error') {
                     key.captcha--;
                     key.save()

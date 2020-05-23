@@ -43,7 +43,7 @@ router.post('/user/password', checkAuth.api, (req, res) => {
         }
     })
     .catch(() => {
-
+        
     })
 
 })
@@ -181,5 +181,9 @@ router.post('/user/key', checkAuth.api, (req, res) => {
     return res.json({captcha: captcha});
 })
 
+
+router.get('/check', (req, res) => {
+    res.send('check captcha')
+})
 
 module.exports = router

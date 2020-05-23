@@ -19,7 +19,7 @@ app.controller('key', ['$scope', '$http', '$timeout', function($scope, $http, $t
             url: '/get/key'
         })
         .then(res => {
-            console.log(res)
+            // console.log(res)
             $scope.keys = res.data.keys
         })
         .catch(err => {
@@ -61,7 +61,7 @@ app.controller('key', ['$scope', '$http', '$timeout', function($scope, $http, $t
         })
     }
     $scope.clickEditOrSave = function(key) {
-        console.log(key)
+        // console.log(key)
         key.showEdit = !key.showEdit;
         if(key.showEdit == true) {
             return
@@ -74,7 +74,7 @@ app.controller('key', ['$scope', '$http', '$timeout', function($scope, $http, $t
             }
         })
         .then(res => {
-            console.log(res)
+            // console.log(res)
             $scope.captcha = res.data.key.userCaptcha
         })
         .catch(() => {
@@ -82,10 +82,9 @@ app.controller('key', ['$scope', '$http', '$timeout', function($scope, $http, $t
         })
     }
     $scope.clickDelete = function(key) {
-        console.log(key)
+        // console.log(key)
         let confirm = window.confirm("Bạn muốn xóa key này?");
         if(confirm) {
-            console.log("xóa")
             $http({
                 method: "POST",
                 url: "/delete/key",
@@ -106,7 +105,6 @@ app.controller('key', ['$scope', '$http', '$timeout', function($scope, $http, $t
         console.log(key)
         let confirm = window.confirm("Bạn muốn thay đổi key này?");
         if(confirm) {
-            console.log("xóa")
             $http({
                 method: "POST",
                 url: "/reload/key",
