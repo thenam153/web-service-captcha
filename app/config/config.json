@@ -22,6 +22,6 @@
       "database": "webnro",
       "host": "127.0.0.1",
       "dialect": "mysql",
-      "port": 3309
+      "port": 3306
     }
   }
