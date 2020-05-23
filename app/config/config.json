@@ -1,0 +1,27 @@
+{
+    "development": {
+  
+      "username": "root",
+      "password": "a01696712498",
+      "database": "webnro",
+      "host": "127.0.0.1",
+      "dialect": "mysql",
+      "port": 3309
+    },
+    "test": {
+      "username": "",
+      "password": null,
+      "database": "",
+      "host": "",
+      "dialect": "mysql",
+      "port": 3309
+    },
+    "production": {
+      "username": "root",
+      "password": "a01696712498",
+      "database": "webnro",
+      "host": "127.0.0.1",
+      "dialect": "mysql",
+      "port": 3309
+    }
+  }
