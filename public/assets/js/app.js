@@ -38,6 +38,17 @@ app.controller('key', ['$scope', '$http', '$timeout', function($scope, $http, $t
         .catch(() => {
 
         })
+        $http({
+            method: 'POST',
+            url: '/get/key'
+        })
+        .then(res => {
+            // console.log(res)
+            $scope.keys = res.data.keys
+        })
+        .catch(err => {
+
+        })
     }
     $scope.clickCreateKey = function() {
         $http({
