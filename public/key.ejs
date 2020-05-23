@@ -125,8 +125,8 @@
                                               <input id="cc-number" ng-model="description" type="tel" class="form-control" >
                                           </div>
                                           <div>
-                                              <button id="payment-button" class="btn btn-lg btn-info btn-block">
-                                                  <span id="payment-button-amount" ng-click="clickCreateKey()">Tạo key</span>
+                                              <button id="payment-button" class="btn btn-lg btn-info btn-block" ng-click="clickCreateKey()">
+                                                  <span id="payment-button-amount" >Tạo key</span>
                                               </button>
                                           </div>
                                       </form>
@@ -172,17 +172,17 @@
                                 <input type="" ng-model="key.description" ng-show="key.showEdit">
                             </td>
                             <td> 
-                                <span ng-click="clickEditOrSave(key)">
+                                <span ng-click="clickEditOrSave(key)" style="cursor: pointer;">
                                     Sửa
                                 </span>
                             </td>
                             <td>
-                                <span ng-click="clickDelete(key)">
+                                <span ng-click="clickDelete(key)" style="cursor: pointer;">
                                     Xóa
                                 </span>
                             </td>
                             <td>
-                                <span ng-click="clickReload(key)">
+                                <span ng-click="clickReload(key)" style="cursor: pointer;">
                                     Reload
                                 </span>
                             </td>
