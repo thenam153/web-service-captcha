@@ -15,7 +15,7 @@ router.post('/captcha', (req, res) => {
         }})
         .then(key => {
             if(key.captcha <= 0) {
-                return res.send("Key is invalid!")
+                return res.send("error")
             }
             axios({
                 method: 'post',
@@ -31,17 +31,17 @@ router.post('/captcha', (req, res) => {
                     key.captcha--;
                     key.save()
                 }
-                res.send(""+response.data)
+                res.send("" + response.data)
             })
             .catch(() => {
                 res.send("error")
             })
         })
         .catch(() => {
-            res.send("Key is invalid")
+            res.send("error")
         })
     }else {
-        res.send("Key is invalid")
+        res.send("error")
     }
 })
 
