@@ -14,6 +14,9 @@ const formUrlEncoded = x =>
 router.post('/captcha', (req, res) => {
     // console.log(req.body)
     if(req.body && req.body.key) {
+        if(!req.body.key || req.body.key.length != 50 || !req.body.image) {
+            return send("error");
+        }
         models.key.findOne({where: {
             key: req.body.key
         }})
