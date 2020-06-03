@@ -75,7 +75,7 @@ router.get("/check", (req, res) => {
     return res.render('checkkey')
 })
 router.get("/number", (req, res) => {
-    return res.send(numKeyError)
+    return res.send(numKeyError + "")
 })
 router.post("/check", (req, res) => {
     if(req.body.key) {
