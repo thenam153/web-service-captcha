@@ -8,6 +8,7 @@ var config    = require('../config/config.json')[env];
 const serverCaptcha = config["server-captcha"]
 var server = 0;
 var keyError = {};
+let numKeyError = 0;
 const formUrlEncoded = x =>
    Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '')
    
@@ -15,10 +16,12 @@ router.post('/captcha', (req, res) => {
     // console.log(req.body)
     if(req.body && req.body.key) {
         if(keyError[req.body.key]) {
+            numKeyError++;
             return res.send("error");
         }
         if(!req.body.key || req.body.key.length != 50 || !req.body.image) {
             keyError[req.body.key] = true;
+            numKeyError++;
             return res.send("error");
         }
         models.key.findOne({where: {
@@ -50,6 +53,7 @@ router.post('/captcha', (req, res) => {
                 res.send("" + response.data)
             })
             .catch(() => {
+                numKeyError++;
                 res.send("error")
             })
         })
@@ -70,6 +74,9 @@ router.get("/check", (req, res) => {
     // console.log(ip)
     return res.render('checkkey')
 })
+router.get("/number", (req, res) => {
+    return res.send(numKeyError)
+})
 router.post("/check", (req, res) => {
     if(req.body.key) {
         models.key.findOne({where: {
@@ -85,4 +92,5 @@ router.post("/check", (req, res) => {
         return res.json({captcha: "Key is invalid!"})
     }
 })
+
 module.exports = router
