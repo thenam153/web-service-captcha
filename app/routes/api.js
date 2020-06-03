@@ -7,15 +7,19 @@ var env       = process.env.NODE_ENV || "development";
 var config    = require('../config/config.json')[env];
 const serverCaptcha = config["server-captcha"]
 var server = 0;
-
+var keyError = {};
 const formUrlEncoded = x =>
    Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '')
    
 router.post('/captcha', (req, res) => {
     // console.log(req.body)
     if(req.body && req.body.key) {
+        if(keyError[req.body.key]) {
+            return res.send("error");
+        }
         if(!req.body.key || req.body.key.length != 50 || !req.body.image) {
-            return send("error");
+            keyError[req.body.key] = true;
+            return res.send("error");
         }
         models.key.findOne({where: {
             key: req.body.key
@@ -50,6 +54,7 @@ router.post('/captcha', (req, res) => {
             })
         })
         .catch(() => {
+            keyError[req.body.key] = true;
             res.send("error")
         })
     }else {
@@ -58,6 +63,11 @@ router.post('/captcha', (req, res) => {
 })
 
 router.get("/check", (req, res) => {
+    // var ip = req.headers['x-forwarded-for'] || 
+    //  req.connection.remoteAddress || 
+    //  req.socket.remoteAddress ||
+    //  (req.connection.socket ? req.connection.socket.remoteAddress : null);
+    // console.log(ip)
     return res.render('checkkey')
 })
 router.post("/check", (req, res) => {
