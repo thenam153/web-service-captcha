@@ -8,18 +8,37 @@ var config    = require('../config/config.json')[env];
 const serverCaptcha = config["server-captcha"]
 var server = 0;
 var keyError = {};
+var ipError = {};
 let numKeyError = 0;
 const formUrlEncoded = x =>
    Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '')
    
 router.post('/captcha', (req, res) => {
     // console.log(req.body)
+    var ip = req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     (req.connection.socket ? req.connection.socket.remoteAddress : null);
+
+    if(ipError[ip] && ipError[ip] > 5) {
+        return res.send("Đm mày")
+    }
     if(req.body && req.body.key) {
         if(keyError[req.body.key]) {
+            if(ipError[ip] == undefined) {
+                ipError[ip] = 0;
+            }else {
+                ipError[ip] ++;
+            }
             numKeyError++;
             return res.send("error");
         }
         if(!req.body.key || req.body.key.length != 50 || !req.body.image) {
+            if(ipError[ip] == undefined) {
+                ipError[ip] = 0;
+            }else {
+                ipError[ip] ++;
+            }
             keyError[req.body.key] = true;
             numKeyError++;
             return res.send("error");
@@ -75,7 +94,7 @@ router.get("/check", (req, res) => {
     return res.render('checkkey')
 })
 router.get("/number", (req, res) => {
-    return res.send(numKeyError + "")
+    return res.send(numKeyError + " / " + Object.keys(ipError).length)
 })
 router.post("/check", (req, res) => {
     if(req.body.key) {
