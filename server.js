@@ -26,6 +26,10 @@ var models = require("./app/models");
 models.user.hasMany(models.key)
 models.key.belongsTo(models.user)
 
+models.user.hasOne(models.token)
+models.token.belongsTo(models.user)
+
+
 require('./app/config/passport/passport.js')(passport, models.user);
 // models.sequelize.sync({force: true}).then(function(){
 

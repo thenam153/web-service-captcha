@@ -10,6 +10,9 @@ var server = 0;
 var keyError = {};
 var ipError = {};
 let numKeyError = 0;
+var bCrypt = require('bcrypt-nodejs')
+var keyController = require("../controllers/keyController")
+
 const formUrlEncoded = x =>
    Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '')
    
@@ -33,7 +36,7 @@ router.post('/captcha', (req, res) => {
             numKeyError++;
             return res.send("error");
         }
-        if(!req.body.key || req.body.key.length != 50 || !req.body.image) {
+        if(!req.body.key ||  !req.body.image) {
             if(ipError[ip] == undefined) {
                 ipError[ip] = 0;
             }else {
@@ -112,4 +115,49 @@ router.post("/check", (req, res) => {
     }
 })
 
+router.post("/create/key", (req, res) => {
+    let username = req.body.username
+    let password = req.body.password
+    console.log(username, password)
+    models.user.findOne({where: {username: username}})
+    .then(async user => {
+        if(!user || !bCrypt.compareSync(password, user.password)) return res.status(401).json({message: "Unauthorized"});
+        if(user.captcha >= Number.parseInt(req.body.captcha)) {
+            user.captcha -= Number.parseInt(req.body.captcha)
+            await user.save()
+            models.key.create({
+                captcha: Number.parseInt(req.body.captcha),
+                key: keyController.randomKey(100),
+                userId: user.id
+            })
+            .then(key => {
+                res.json({key: key.key})
+            })
+            .catch(err => {
+                res.status(500).json({message: "Server get error"})
+            })
+        }else {
+            res.status(400).json({message: "Bad request", captcha: user.captcha});
+        }
+    })
+    .catch(err => {
+        res.status(401).json({message: "Unauthorized"})
+    })
+})
+
+router.post("/check/key", (req, res) => {
+    if(req.body.key) {
+        models.key.findOne({where: {
+            key: req.body.key
+        }})
+        .then(key => {
+            return res.json({number: key.captcha})
+        })
+        .catch(() => {
+            return res.json({number: -1})
+        })
+    }else{
+        return res.json({number: -1})
+    }
+})
 module.exports = router
