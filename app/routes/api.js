@@ -16,7 +16,7 @@ var keyController = require("../controllers/keyController")
 const formUrlEncoded = x =>
    Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '')
    
-router.post('/captcha', (req, res) => {
+router.post('/captcha/solve', (req, res) => {
     // console.log(req.body)
     var ip = req.headers['x-forwarded-for'] || 
      req.connection.remoteAddress || 
