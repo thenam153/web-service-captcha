@@ -127,11 +127,12 @@ router.post("/create/key", (req, res) => {
             await user.save()
             models.key.create({
                 captcha: Number.parseInt(req.body.captcha),
-                key: keyController.randomKey(100),
-                userId: user.id
+                key: keyController.randomKey(64),
+                userId: user.id,
+                description: req.body.description
             })
             .then(key => {
-                res.json({key: key.key})
+                res.json({key: key.key, description: key.description})
             })
             .catch(err => {
                 res.status(500).json({message: "Server get error"})
