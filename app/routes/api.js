@@ -88,6 +88,78 @@ router.post('/captcha/solve', (req, res) => {
     }
 })
 
+router.post('/captcha', (req, res) => {
+    // console.log(req.body)
+    var ip = req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     (req.connection.socket ? req.connection.socket.remoteAddress : null);
+
+    if(ipError[ip] && ipError[ip] > 5) {
+        return res.send("Đm mày")
+    }
+    if(req.body && req.body.key) {
+        if(keyError[req.body.key]) {
+            if(ipError[ip] == undefined) {
+                ipError[ip] = 0;
+            }else {
+                ipError[ip] ++;
+            }
+            numKeyError++;
+            return res.send("error");
+        }
+        if(!req.body.key ||  !req.body.image) {
+            if(ipError[ip] == undefined) {
+                ipError[ip] = 0;
+            }else {
+                ipError[ip] ++;
+            }
+            keyError[req.body.key] = true;
+            numKeyError++;
+            return res.send("error");
+        }
+        models.key.findOne({where: {
+            key: req.body.key
+        }})
+        .then(key => {
+            if(key.captcha <= 0) {
+                return res.send("error")
+            }
+            if(server < serverCaptcha.length - 1) {
+                server++;
+            }else {
+                server = 0;
+            }
+            console.log(server)
+            axios({
+                method: 'post',
+                url: `http://localhost:${serverCaptcha[server]}/postnow`,
+                data: formUrlEncoded({
+                    image: req.body.image
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                })
+            .then(response => {
+                if(response.data != 'error') {
+                    key.captcha--;
+                    key.save()
+                }
+                res.send("" + response.data)
+            })
+            .catch(() => {
+                numKeyError++;
+                res.send("error")
+            })
+        })
+        .catch(() => {
+            keyError[req.body.key] = true;
+            res.send("error")
+        })
+    }else {
+        res.send("error")
+    }
+})
+
 router.get("/check", (req, res) => {
     // var ip = req.headers['x-forwarded-for'] || 
     //  req.connection.remoteAddress || 
