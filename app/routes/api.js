@@ -23,7 +23,7 @@ router.post('/captcha/solve', (req, res) => {
      req.socket.remoteAddress ||
      (req.connection.socket ? req.connection.socket.remoteAddress : null);
 
-    if(ipError[ip] && ipError[ip] > 5) {
+    if(ip && ipError[ip] && ipError[ip] > 5) {
         return res.send("Đm mày")
     }
     if(req.body && req.body.key) {
@@ -95,7 +95,7 @@ router.post('/captcha', (req, res) => {
      req.socket.remoteAddress ||
      (req.connection.socket ? req.connection.socket.remoteAddress : null);
 
-    if(ipError[ip] && ipError[ip] > 5) {
+    if(ip && ipError[ip] && ipError[ip] > 5) {
         return res.send("Đm mày")
     }
     if(req.body && req.body.key) {
@@ -125,7 +125,7 @@ router.post('/captcha', (req, res) => {
             if(key.captcha <= 0) {
                 return res.send("error")
             }
-            if(server < serverCaptcha.length - 1) {
+            if(server < serverCaptcha.length - 1) {     
                 server++;
             }else {
                 server = 0;
